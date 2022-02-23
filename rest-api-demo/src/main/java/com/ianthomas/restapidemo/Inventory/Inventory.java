@@ -1,20 +1,49 @@
 package com.ianthomas.restapidemo.Inventory;
 
-public class Inventory {
-    String  storeLocation;
-    int     storeId;
-    int     beefCount;
-    int     chickenCount;
-    int     milkCount;
-    float   FridgeTemp;
+import javax.persistence.*;
+import java.util.List;
 
-    public Inventory(String storeLocation, int storeId, int beefCount, int chickenCount, int milkCount, float fridgeTemp) {
-        this.storeLocation = storeLocation;
+// Maps class onto JPA database
+@Entity
+@Table
+public class Inventory {
+    @Id
+    @SequenceGenerator(
+            name = "inventory_sequence",
+            sequenceName = "inventory_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "inventory_sequence"
+    )
+    private Integer     storeId;
+    private String  storeLocation;
+    private Integer     beefCount;
+    private Integer     chickenCount;
+    private Integer     milkCount;
+    private Float   fridgeTemp;
+
+    public Inventory(int storeId, String storeLocation, int beefCount, int chickenCount, int milkCount, float fridgeTemp) {
         this.storeId = storeId;
+        this.storeLocation = storeLocation;
         this.beefCount = beefCount;
         this.chickenCount = chickenCount;
         this.milkCount = milkCount;
-        FridgeTemp = fridgeTemp;
+        this.fridgeTemp = fridgeTemp;
+    }
+
+    public Inventory() {
+        this.storeId = 0;
+        this.storeLocation = "Wichita, KS";
+        this.beefCount = 1;
+        this.chickenCount = 1;
+        this.milkCount = 1;
+        this.fridgeTemp = 32.0f;
+    }
+
+    public void getInventory() {
+        System.out.println(List.of(this.storeId, this.storeLocation,this.beefCount, this.chickenCount, this.milkCount, this.fridgeTemp));
     }
 
     public String getStoreLocation() {
@@ -58,11 +87,11 @@ public class Inventory {
     }
 
     public float getFridgeTemp() {
-        return FridgeTemp;
+        return fridgeTemp;
     }
 
     public void setFridgeTemp(float fridgeTemp) {
-        FridgeTemp = fridgeTemp;
+        this.fridgeTemp = fridgeTemp;
     }
 }
 

@@ -1,11 +1,10 @@
 package com.ianthomas.restapidemo.Inventory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/v1/inventory")
@@ -21,5 +20,28 @@ public class InventoryController {
     @GetMapping
     public List<Inventory> getInventory() {
         return inventoryService.getInventory();
+    }
+
+    // Map POST request to database
+    @PostMapping
+    public void registerInventory(@RequestBody Inventory inventory) {
+        inventoryService.addInventory(inventory);
+    }
+
+    @DeleteMapping(path = "{storeId}")
+    public void deleteInventory(@PathVariable("storeId") Integer storeId) {
+        inventoryService.deleteInventory(storeId);
+    }
+
+    @PutMapping(path = "{storeId}")
+    public void updateInventory(
+            @PathVariable("storeId") Integer storeId,
+            @RequestParam(required = false) String  storeLocation,
+            @RequestParam(required = false) Integer beefCount,
+            @RequestParam(required = false) Integer chickenCount,
+            @RequestParam(required = false) Integer milkCount,
+            @RequestParam(required = false) Float fridgeTemp) {
+
+        inventoryService.updateInventory(storeId, storeLocation, beefCount, chickenCount, milkCount, fridgeTemp);
     }
 }
