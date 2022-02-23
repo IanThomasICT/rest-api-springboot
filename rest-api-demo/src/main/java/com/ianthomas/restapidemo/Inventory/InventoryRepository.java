@@ -9,9 +9,9 @@ import java.util.Optional;
 public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
 
     // Query Example
-    @Query("SELECT i FROM Inventory i WHERE i.storeId = ?1")
-    Optional<Inventory> findInventoryByStoreId(int id);
+    @Query("SELECT i FROM Inventory i WHERE i.inventoryId = ?1")
+    Optional<Inventory> findInventoryByInventoryId(int id);
 
-    @Query("FROM Inventory i ORDER BY i.storeId ASC")
+    @Query("FROM Inventory i ORDER BY i.inventoryId ASC")
     List<Inventory> findAllOrderByStoreId();
 }

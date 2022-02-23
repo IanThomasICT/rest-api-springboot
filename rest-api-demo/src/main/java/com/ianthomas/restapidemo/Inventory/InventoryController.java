@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/v1/inventory")
@@ -18,8 +17,8 @@ public class InventoryController {
     }
 
     @GetMapping
-    public List<Inventory> getInventory() {
-        return inventoryService.getInventory();
+    public List<Inventory> getInventoryItems() {
+        return inventoryService.getInventoryItems();
     }
 
     // Map POST request to database

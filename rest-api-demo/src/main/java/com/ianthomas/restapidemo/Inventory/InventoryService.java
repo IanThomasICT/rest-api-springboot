@@ -18,13 +18,13 @@ public class InventoryService {
         this.inventoryRepository = inventoryRepository;
     }
 
-    public List<Inventory> getInventory() {
+    public List<Inventory> getInventoryItems() {
         return inventoryRepository.findAllOrderByStoreId();
     }
 
     public void addInventory(Inventory inventory) {
         Optional<Inventory> inventoryByID = inventoryRepository
-                .findInventoryByStoreId(inventory.getStoreId());
+                .findInventoryByInventoryId(inventory.getInventoryId());
         if (inventoryByID.isPresent()) {
             throw new IllegalStateException("storeId already exists");
         }
@@ -37,6 +37,7 @@ public class InventoryService {
             throw new IllegalStateException("Inventory id " + storeId + " does not exist");
         }
         inventoryRepository.deleteById(storeId);
+        System.out.println("Deleted inventory: " + storeId + ".");
     }
 
 
@@ -65,7 +66,6 @@ public class InventoryService {
         if (fridgeTemp != null && !Objects.equals(inventory.getFridgeTemp(),fridgeTemp)) {
             inventory.setFridgeTemp(fridgeTemp);
         }
-//
-//        inventoryRepository.save(inventory);
+        System.out.println("Updated inventory: " + storeId + ".");
     }
 }

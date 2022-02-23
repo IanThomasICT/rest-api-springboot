@@ -2,6 +2,9 @@ package com.ianthomas.restapidemo.Inventory;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.UUID;
+
+// TODO Rename Inventory
 
 // Maps class onto JPA database
 @Entity
@@ -17,15 +20,17 @@ public class Inventory {
             strategy = GenerationType.SEQUENCE,
             generator = "inventory_sequence"
     )
-    private Integer     storeId;
-    private String  storeLocation;
-    private Integer     beefCount;
-    private Integer     chickenCount;
-    private Integer     milkCount;
-    private Float   fridgeTemp;
+    private Integer    inventoryId;    // Primary Key
+    private UUID        supplierId;    // Foreign Key of Supplier
+    private String   storeLocation;
+    private Integer      beefCount;
+    private Integer   chickenCount;
+    private Integer      milkCount;
+    private Float       fridgeTemp;
 
-    public Inventory(int storeId, String storeLocation, int beefCount, int chickenCount, int milkCount, float fridgeTemp) {
-        this.storeId = storeId;
+    public Inventory(Integer inventoryId, String storeLocation, Integer beefCount, Integer chickenCount, Integer milkCount, Float fridgeTemp) {
+        this.inventoryId = inventoryId;
+        this.supplierId = UUID.randomUUID();
         this.storeLocation = storeLocation;
         this.beefCount = beefCount;
         this.chickenCount = chickenCount;
@@ -34,16 +39,13 @@ public class Inventory {
     }
 
     public Inventory() {
-        this.storeId = 0;
+        this.inventoryId = 0;
+        this.supplierId = UUID.randomUUID();
         this.storeLocation = "Wichita, KS";
-        this.beefCount = 1;
-        this.chickenCount = 1;
-        this.milkCount = 1;
-        this.fridgeTemp = 32.0f;
-    }
-
-    public void getInventory() {
-        System.out.println(List.of(this.storeId, this.storeLocation,this.beefCount, this.chickenCount, this.milkCount, this.fridgeTemp));
+        this.beefCount = 100;
+        this.chickenCount = 100;
+        this.milkCount = 100;
+        this.fridgeTemp = 40.0f;
     }
 
     public String getStoreLocation() {
@@ -54,12 +56,16 @@ public class Inventory {
         this.storeLocation = storeLocation;
     }
 
-    public int getStoreId() {
-        return storeId;
+    public UUID getSupplierId() {
+        return supplierId;
     }
 
-    public void setStoreId(int storeId) {
-        this.storeId = storeId;
+    public Integer getInventoryId() {
+        return inventoryId;
+    }
+
+    public void setInventoryId(Integer inventoryId) {
+        this.inventoryId = inventoryId;
     }
 
     public int getBeefCount() {
@@ -93,6 +99,9 @@ public class Inventory {
     public void setFridgeTemp(float fridgeTemp) {
         this.fridgeTemp = fridgeTemp;
     }
+
+
+
 }
 
 
