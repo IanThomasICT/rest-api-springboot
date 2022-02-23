@@ -8,100 +8,50 @@ import java.util.UUID;
 
 // Maps class onto JPA database
 @Entity
-@Table
+@Table(name = "inventory")
 public class Inventory {
     @Id
     @SequenceGenerator(
             name = "inventory_sequence",
             sequenceName = "inventory_sequence",
-            allocationSize = 1
+            allocationSize = 5,
+            initialValue = 1000
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "inventory_sequence"
     )
-    private Integer    inventoryId;    // Primary Key
-    private UUID        supplierId;    // Foreign Key of Supplier
-    private String   storeLocation;
-    private Integer      beefCount;
-    private Integer   chickenCount;
-    private Integer      milkCount;
-    private Float       fridgeTemp;
+    private Integer       productId;    // Primary Key
+    private Integer      supplierId;    // Foreign Key of Supplier
+    private String         itemName;
 
-    public Inventory(Integer inventoryId, String storeLocation, Integer beefCount, Integer chickenCount, Integer milkCount, Float fridgeTemp) {
-        this.inventoryId = inventoryId;
-        this.supplierId = UUID.randomUUID();
-        this.storeLocation = storeLocation;
-        this.beefCount = beefCount;
-        this.chickenCount = chickenCount;
-        this.milkCount = milkCount;
-        this.fridgeTemp = fridgeTemp;
+    public Inventory(Integer productId, Integer supplierId, String itemName) {
+        this.productId = productId;
+        this.supplierId = supplierId;
+        this.itemName = itemName;
     }
 
     public Inventory() {
-        this.inventoryId = 0;
-        this.supplierId = UUID.randomUUID();
-        this.storeLocation = "Wichita, KS";
-        this.beefCount = 100;
-        this.chickenCount = 100;
-        this.milkCount = 100;
-        this.fridgeTemp = 40.0f;
+        this.productId = 0;
+        this.supplierId = 0;
+        this.itemName = null;
     }
 
-    public String getStoreLocation() {
-        return storeLocation;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public void setStoreLocation(String storeLocation) {
-        this.storeLocation = storeLocation;
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 
-    public UUID getSupplierId() {
-        return supplierId;
+    public String getItemName() {
+        return itemName;
     }
 
-    public Integer getInventoryId() {
-        return inventoryId;
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
-
-    public void setInventoryId(Integer inventoryId) {
-        this.inventoryId = inventoryId;
-    }
-
-    public int getBeefCount() {
-        return beefCount;
-    }
-
-    public void setBeefCount(int beefCount) {
-        this.beefCount = beefCount;
-    }
-
-    public int getChickenCount() {
-        return chickenCount;
-    }
-
-    public void setChickenCount(int chickenCount) {
-        this.chickenCount = chickenCount;
-    }
-
-    public int getMilkCount() {
-        return milkCount;
-    }
-
-    public void setMilkCount(int milkCount) {
-        this.milkCount = milkCount;
-    }
-
-    public float getFridgeTemp() {
-        return fridgeTemp;
-    }
-
-    public void setFridgeTemp(float fridgeTemp) {
-        this.fridgeTemp = fridgeTemp;
-    }
-
-
-
 }
 
 

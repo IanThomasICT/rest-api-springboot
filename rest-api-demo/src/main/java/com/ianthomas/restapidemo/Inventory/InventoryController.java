@@ -27,20 +27,16 @@ public class InventoryController {
         inventoryService.addInventory(inventory);
     }
 
-    @DeleteMapping(path = "{storeId}")
-    public void deleteInventory(@PathVariable("storeId") Integer storeId) {
-        inventoryService.deleteInventory(storeId);
+    @DeleteMapping(path = "{productId}")
+    public void deleteInventory(@PathVariable("productId") Integer productId) {
+        inventoryService.deleteInventory(productId);
     }
 
-    @PutMapping(path = "{storeId}")
+    @PutMapping(path = "{productId}")
     public void updateInventory(
-            @PathVariable("storeId") Integer storeId,
-            @RequestParam(required = false) String  storeLocation,
-            @RequestParam(required = false) Integer beefCount,
-            @RequestParam(required = false) Integer chickenCount,
-            @RequestParam(required = false) Integer milkCount,
-            @RequestParam(required = false) Float fridgeTemp) {
+            @PathVariable("productId") Integer productId,
+            @RequestParam(required = false) String itemName) {
 
-        inventoryService.updateInventory(storeId, storeLocation, beefCount, chickenCount, milkCount, fridgeTemp);
+        inventoryService.updateInventory(productId, itemName);
     }
 }

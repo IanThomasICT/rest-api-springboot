@@ -19,53 +19,38 @@ public class InventoryService {
     }
 
     public List<Inventory> getInventoryItems() {
-        return inventoryRepository.findAllOrderByStoreId();
+        return inventoryRepository.findAllOrderByProductId();
     }
 
     public void addInventory(Inventory inventory) {
         Optional<Inventory> inventoryByID = inventoryRepository
-                .findInventoryByInventoryId(inventory.getInventoryId());
+                .findInventoryByProductId(inventory.getProductId());
         if (inventoryByID.isPresent()) {
-            throw new IllegalStateException("storeId already exists");
+            throw new IllegalStateException("productId already exists");
         }
         inventoryRepository.save(inventory);
     }
 
-    public void deleteInventory(Integer storeId) {
-        boolean exists = inventoryRepository.existsById(storeId);
+    public void deleteInventory(Integer productId) {
+        boolean exists = inventoryRepository.existsById(productId);
         if (!exists) {
-            throw new IllegalStateException("Inventory id " + storeId + " does not exist");
+            throw new IllegalStateException("Inventory id " + productId + " does not exist");
         }
-        inventoryRepository.deleteById(storeId);
-        System.out.println("Deleted inventory: " + storeId + ".");
+        inventoryRepository.deleteById(productId);
+        System.out.println("Deleted inventory item: " + productId + ".");
     }
 
 
     // Transactional: Sets classes returned by internal methods (inventory) to a 'managed' state and thus modifiable
     @Transactional
-    public void updateInventory(Integer storeId, String storeLocation, Integer beefCount, Integer chickenCount, Integer milkCount, Float fridgeTemp) {
-        Inventory inventory = inventoryRepository.findById(storeId)
-                .orElseThrow(() -> new IllegalStateException("Inventory id " + storeId + " does not exist"));
+    public void updateInventory(Integer productId, String itemName) {
+        Inventory inventory = inventoryRepository.findById(productId)
+                .orElseThrow(() -> new IllegalStateException("Inventory id " + productId + " does not exist"));
 
-        if (storeLocation != null && storeLocation.length() > 0 && !Objects.equals(inventory.getStoreLocation(),storeLocation)) {
-            inventory.setStoreLocation(storeLocation);
+        if (!Objects.equals(inventory.getItemName(), itemName) && itemName.length() > 0) {
+            inventory.setItemName(itemName);
         }
 
-        if (beefCount != null && !Objects.equals(inventory.getBeefCount(),beefCount)) {
-            inventory.setBeefCount(beefCount);
-        }
-
-        if (chickenCount != null && !Objects.equals(inventory.getChickenCount(),chickenCount)) {
-            inventory.setChickenCount(chickenCount);
-        }
-
-        if (milkCount != null && !Objects.equals(inventory.getMilkCount(),milkCount)) {
-            inventory.setMilkCount(milkCount);
-        }
-
-        if (fridgeTemp != null && !Objects.equals(inventory.getFridgeTemp(),fridgeTemp)) {
-            inventory.setFridgeTemp(fridgeTemp);
-        }
-        System.out.println("Updated inventory: " + storeId + ".");
+        System.out.println("Updated inventory item: " + productId + ".");
     }
 }

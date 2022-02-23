@@ -15,21 +15,15 @@ public class InventoryConfig {
     CommandLineRunner commandLineRunner(InventoryRepository repository) {
         return args -> {
             Inventory ict = new Inventory(
-                    1,
-                    "Wichita, KS",
-                    123,
-                    512,
-                    41,
-                    41.3f
+                    1000,
+                    10,
+                    "5lb Steak"
             );
 
             Inventory aus = new Inventory(
-                    2,
-                    "Austin, TX",
-                    533,
-                    1125,
-                    712,
-                    39.2f
+                    1005,
+                    20,
+                    "2lb Chicken Breast"
             );
             repository.saveAll(List.of(ict, aus));
         };
