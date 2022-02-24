@@ -1,5 +1,7 @@
-package com.ianthomas.restapidemo.Inventory;
+package com.ianthomas.restapidemo.rest.controller;
 
+import com.ianthomas.restapidemo.service.InventoryService;
+import com.ianthomas.restapidemo.persistence.model.Inventory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

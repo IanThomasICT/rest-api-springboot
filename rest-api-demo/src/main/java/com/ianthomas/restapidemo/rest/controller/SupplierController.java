@@ -1,6 +1,7 @@
-package com.ianthomas.restapidemo.Supplier;
+package com.ianthomas.restapidemo.rest.controller;
 
-import com.ianthomas.restapidemo.Supplier.Supplier;
+import com.ianthomas.restapidemo.service.SupplierService;
+import com.ianthomas.restapidemo.persistence.model.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,16 +30,16 @@ public class SupplierController {
         supplierService.addSupplier(supplier);
     }
 
-    @DeleteMapping(path = "{supplierId}")
-    public void deleteSupplier(@PathVariable("supplierId") Integer supplierId) {
-        supplierService.deleteSupplier(supplierId);
+    @DeleteMapping(path = "{id}")
+    public void deleteSupplier(@PathVariable("id") Integer id) {
+        supplierService.deleteSupplier(id);
     }
 
-    @PutMapping(path = "{supplierId}")
+    @PutMapping(path = "{id}")
     public void updateSupplier(
-            @PathVariable("supplierId") Integer supplierId,
+            @PathVariable("id") Integer id,
             @RequestParam(required = false) String supplierName) {
 
-        supplierService.updateSupplier(supplierId, supplierName);
+        supplierService.updateSupplier(id, supplierName);
     }
 }

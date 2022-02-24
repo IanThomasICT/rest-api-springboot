@@ -1,5 +1,7 @@
-package com.ianthomas.restapidemo.Inventory;
+package com.ianthomas.restapidemo.service;
 
+import com.ianthomas.restapidemo.persistence.model.Inventory;
+import com.ianthomas.restapidemo.persistence.repository.InventoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +25,6 @@ public class InventoryService {
     }
 
     public void addInventory(Inventory inventory) {
-        Optional<Inventory> inventoryByID = inventoryRepository
-                .findInventoryByProductId(inventory.getProductId());
-        if (inventoryByID.isPresent()) {
-            throw new IllegalStateException("productId already exists");
-        }
         inventoryRepository.save(inventory);
     }
 
