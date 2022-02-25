@@ -6,18 +6,41 @@ import javax.persistence.*;
 @Entity
 @Table
 public class Inventory {
-    @SequenceGenerator(name = "inventory_sequence", initialValue = 1000, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "inventory_sequence")
-    @Id private int productId;        // Primary Key
+    @Id
+    @SequenceGenerator(name = "inv", initialValue = 1000)
+    @GeneratedValue (strategy = GenerationType.AUTO, generator = "inv")
+    private int productId;            // Primary Key
     private String itemName;          // Unique
     private float price;
 
-    @OneToOne(cascade = CascadeType.ALL) private Supplier supplier;        // Foreign Key of Supplier
+    @ManyToOne private Supplier supplier;        // FK of Supplier
+
+    @ManyToOne
+    @JoinColumn(name = "purchasedBy")
+    private Customer customer;                   // FK of Customer
+
+
+
+
+
+
+
+    public Inventory(String itemName, float price) {
+        this.itemName = itemName;
+        this.price = price;
+    }
 
     public Inventory(String itemName, float price, Supplier supplier) {
         this.itemName = itemName;
         this.price = price;
         this.supplier = supplier;
+    }
+
+    public Inventory(String itemName, float price, Supplier supplier, Customer customer) {
+        this.itemName = itemName;
+        this.price = price;
+        this.supplier = supplier;
+        this.customer = customer;
     }
 
     public Inventory() {
@@ -54,6 +77,14 @@ public class Inventory {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }
 

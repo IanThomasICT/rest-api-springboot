@@ -9,10 +9,13 @@ import java.util.Optional;
 
 public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
-    @Query("FROM Customer c ORDER BY c.id ASC")
+    @Query("SELECT c FROM Customer c ORDER BY c.id ASC")
     List<Customer> findCustomersById();
 
     // Check existing customer emails
     @Query("SELECT c FROM Customer c WHERE c.email = ?1")
     Optional<Customer> findCustomerByEmail(String email);
+
+    @Query("SELECT c FROM Customer c WHERE c.id = ?1")
+    Optional<Customer> findCustomerById(Integer id);
 }

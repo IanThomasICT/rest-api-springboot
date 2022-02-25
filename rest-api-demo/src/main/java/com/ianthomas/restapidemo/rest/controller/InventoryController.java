@@ -23,22 +23,39 @@ public class InventoryController {
         return inventoryService.getInventoryItems();
     }
 
+    @GetMapping(path = "available")
+    public List<Inventory> getAvailableInventory() {
+        return inventoryService.getAvailableInventory();
+    }
+
+    @GetMapping(path = "purchased")
+    public List<Inventory> getPurchasedInventory() {
+        return inventoryService.getPurchasedInventory();
+    }
+
     // Map POST request to database
     @PostMapping
-    public void registerInventory(@RequestBody Inventory inventory) {
+    public void addInventory(@RequestBody Inventory inventory) {
+        if (inventory.getProductId() < 1000) { throw new IllegalStateException("Invalid: id must be greater than 1000"); }
         inventoryService.addInventory(inventory);
     }
 
     @DeleteMapping(path = "{productId}")
     public void deleteInventory(@PathVariable("productId") Integer productId) {
+        if (productId < 1000) { throw new IllegalStateException("Invalid: id must be greater than 1000"); }
         inventoryService.deleteInventory(productId);
     }
 
     @PutMapping(path = "{productId}")
     public void updateInventory(
             @PathVariable("productId") Integer productId,
-            @RequestParam(required = false) String itemName) {
+            @RequestParam(required = false) String itemName,
+            @RequestParam(required = false) Float itemPrice,
+            @RequestParam(required = false) Integer supplierId,
+            @RequestParam(required = false) String supplierName,
+            @RequestParam(required = false) String supplierAddress) {
 
-        inventoryService.updateInventory(productId, itemName);
+        if (productId < 1000) { throw new IllegalStateException("Invalid: id must be greater than 1000"); }
+        inventoryService.updateInventory(productId, itemName, itemPrice, supplierId, supplierName, supplierAddress);
     }
 }

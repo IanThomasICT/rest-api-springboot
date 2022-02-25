@@ -25,26 +25,24 @@ public class SupplierService {
 
     public void addSupplier(Supplier supplier) {
         if (supplier.getId() % 10 != 0) {
-            throw new IllegalStateException("Invalid Supplier Id");
+            throw new IllegalStateException("Invalid Supplier Id: Supplier id must be a multiple of 10");
         }
         Optional<Supplier> supplierByID = supplierRepository
                 .findSupplierBySupplierId(supplier.getId());
         if (supplierByID.isPresent()) {
-            throw new IllegalStateException("Supplier Id already exists");
+            throw new IllegalStateException("Supplier Id " + supplier.getId() + " already exists");
         }
         supplierRepository.save(supplier);
+        System.out.println("Added supplier: " + supplier.getName() + ".");
     }
 
     public void deleteSupplier(Integer id) {
-        if (id % 10 != 0) {
-            throw new IllegalStateException("Invalid Supplier Id");
-        }
         boolean exists = supplierRepository.existsById(id);
         if (!exists) {
             throw new IllegalStateException("Supplier id " + id + " does not exist");
         }
         supplierRepository.deleteById(id);
-        System.out.println("Deleted supplier item: " + id + ".");
+        System.out.println("Deleted supplier: " + id + ".");
     }
 
 

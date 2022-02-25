@@ -25,16 +25,22 @@ public class CustomerController {
 
     @PostMapping
     public void addCustomer(@RequestBody Customer customer) {
+        if (customer.getId() < 0) { throw new IllegalStateException("Invalid: id must be a positive value"); }
         customerService.addCustomer(customer);
     }
 
     @PutMapping(path = "{id}")
-    public void updateCustomer(@RequestParam int id,
+    public void updateCustomer(@PathVariable("id") Integer id,
                                @RequestParam(required = false) String name,
-                               @RequestParam(required = false) String email,
-                               @RequestParam(required = false) String item_name,
-                               @RequestParam(required = false) Float item_price) {
-        customerService.updateCustomer(id, name, email, item_name, item_price);
+                               @RequestParam(required = false) String email) {
+        if (id < 0) { throw new IllegalStateException("Invalid: id must be a positive value"); }
+        customerService.updateCustomer(id, name, email);
+    }
+
+    @DeleteMapping(path = "{id}")
+    public void deleteCustomer(@PathVariable("id") Integer id) {
+        if (id < 0) { throw new IllegalStateException("Invalid: id must be a positive value"); }
+        customerService.deleteCustomer(id);
     }
 
 

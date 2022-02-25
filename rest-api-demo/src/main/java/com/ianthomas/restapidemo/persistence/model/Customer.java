@@ -1,19 +1,20 @@
 package com.ianthomas.restapidemo.persistence.model;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table
 public class Customer {
     @Id @GeneratedValue private Integer id;
     private String name;
-//    private LocalDate dob;            // Add when able to serialize JSON data
-//    @Transient private Integer age;
     private String email;
-    @OneToMany(targetEntity = Customer.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "purchasedBy", referencedColumnName = "id")
-    private List<Inventory> items;
+
+    @OneToMany(mappedBy = "customer",
+               cascade = CascadeType.ALL,
+               fetch = FetchType.LAZY)
+    private Set<Inventory> items = new HashSet<>();
 
     public Customer(String name, String email) {
         this.name = name;
@@ -42,19 +43,19 @@ public class Customer {
         this.name = name;
     }
 
-    public List<Inventory> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Inventory> items) {
-        this.items = items;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setItems(Set<Inventory> items) {
+        this.items = items;
+
+        for (Inventory i : items){
+            i.setCustomer(this);
+        }
     }
 }

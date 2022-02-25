@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/supplier")
+@RequestMapping(path = "api/v1/suppliers")
 public class SupplierController {
 
     // Instantiate a Service property
@@ -26,12 +26,14 @@ public class SupplierController {
 
     // Map POST request to database
     @PostMapping
-    public void registerSupplier(@RequestBody Supplier supplier) {
+    public void addSupplier(@RequestBody Supplier supplier) {
+        if (supplier.getId() < 0) { throw new IllegalStateException("Invalid: id must be a positive value"); }
         supplierService.addSupplier(supplier);
     }
 
     @DeleteMapping(path = "{id}")
     public void deleteSupplier(@PathVariable("id") Integer id) {
+        if (id < 0) { throw new IllegalStateException("Invalid: id must be a positive value"); }
         supplierService.deleteSupplier(id);
     }
 
@@ -39,7 +41,7 @@ public class SupplierController {
     public void updateSupplier(
             @PathVariable("id") Integer id,
             @RequestParam(required = false) String supplierName) {
-
+        if (id < 0) { throw new IllegalStateException("Invalid: id must be a positive value"); }
         supplierService.updateSupplier(id, supplierName);
     }
 }
