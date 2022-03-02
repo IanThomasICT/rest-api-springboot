@@ -11,6 +11,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,31 +25,28 @@ public class RestApiDemoConfig {
     @Bean
     CommandLineRunner commandLineRunner() {
         return args -> {
-            // Add inventory
-            Inventory item1 = new Inventory("5lb Steak", 23.50f);
-            Inventory item2 = new Inventory("2lb Chicken Breast", 13.99f);
-            Inventory item3 = new Inventory("5lb Rotisserie Chicken", 27.99f);
-            Inventory item4 = new Inventory("2lb Ribeye", 17.00f);
-            Inventory item5 = new Inventory("1/4lb Patty", 7.00f);
-            Inventory item6 = new Inventory("Dozen of Eggs", 5.00f);
-            inventoryRepository.saveAllAndFlush(List.of(item1, item2, item3, item4, item5, item6));
 
-
-            // TODO Fix set methods to sync with existing inventory items
-            // Setup Suppliers and Customers
-            Supplier mbi = new Supplier("Midwest Beef Inc.", "Salina, KS");
-//                mbi.setExports(Set.of(item1, item4, item5));
-            Supplier aus = new Supplier("Austin Chicken Corp.", "Austin, TX");
-//                aus.setExports(Set.of(item2, item6));
+            // Create parents first
+            Supplier sup1 = new Supplier("Midwest Beef Inc.", "Salina, KS");
+            Supplier sup2 = new Supplier("Austin Chicken Corp.", "Austin, TX");
             Customer cus1 = new Customer("Jay Travis","jayT@gmail.com");
-//                cus1.setItems(Set.of(item1, item3, item5));
             Customer cus2 = new Customer("Ashton Smith", "ashSmith@gmail.com");
-//                cus2.setItems(Set.of(item2, item5));
 
-
-            supplierRepository.saveAll(List.of(mbi,aus));
+            supplierRepository.saveAll(List.of(sup1,sup2));
             customerRepository.saveAll(List.of(cus1,cus2));
 
+            // Add inventory (Child)
+            Inventory item1 = new Inventory("5lb Steak", 23.50f, sup1, cus1);
+            Inventory item2 = new Inventory("2lb Chicken Breast", 13.99f, sup1, cus2);
+            Inventory item3 = new Inventory("5lb Rotisserie Chicken", 27.99f, sup1);
+            Inventory item4 = new Inventory("2lb Ribeye", 17.00f, sup2, cus1);
+            Inventory item5 = new Inventory("1/4lb Patty", 7.00f, sup2);
+            Inventory item6 = new Inventory("Dozen of Eggs", 5.00f, sup2);
+
+
+            inventoryRepository.saveAll(List.of(item1,item2,item3,item4,item5,item6));
         };
     }
 }
+
+//            inventoryRepository.saveAll(List.of(item1,item2,item3,item4,item5,item6));

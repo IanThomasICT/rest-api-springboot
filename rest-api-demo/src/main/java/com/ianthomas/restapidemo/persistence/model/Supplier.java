@@ -1,5 +1,6 @@
 package com.ianthomas.restapidemo.persistence.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ianthomas.restapidemo.persistence.model.Inventory;
 
 import javax.persistence.*;
@@ -16,8 +17,17 @@ public class Supplier {
     private String name;
     private String location;
 
-    @OneToMany (mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @OneToMany (mappedBy = "supplier", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private Set<Inventory> exports = new HashSet<>();
+
+
+
+    public Supplier(String name, String location, Set<Inventory> exports) {
+        this.name = name;
+        this.location = location;
+        this.exports = exports;
+    }
 
     public Supplier(String name, String location) {
         this.name = name;
@@ -46,6 +56,10 @@ public class Supplier {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public Set<Inventory> getExports() {
+        return exports;
     }
 
     public void setExports(Set<Inventory> exports) {

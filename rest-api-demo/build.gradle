@@ -17,6 +17,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'mysql:mysql-connector-java:8.0.25'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'javax.validation:validation-api:2.0.1.Final'    // @NotNull validation annotation
 }
 
 tasks.named('test') {

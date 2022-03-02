@@ -1,5 +1,7 @@
 package com.ianthomas.restapidemo.persistence.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,14 +13,19 @@ public class Customer {
     private String name;
     private String email;
 
-    @OneToMany(mappedBy = "customer",
-               cascade = CascadeType.ALL,
-               fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private Set<Inventory> items = new HashSet<>();
 
     public Customer(String name, String email) {
         this.name = name;
         this.email = email;
+    }
+
+    public Customer(String name, String email, Set<Inventory> items) {
+        this.name = name;
+        this.email = email;
+        this.items = items;
     }
 
     public Customer() {
@@ -49,6 +56,10 @@ public class Customer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Set<Inventory> getItems() {
+        return items;
     }
 
     public void setItems(Set<Inventory> items) {

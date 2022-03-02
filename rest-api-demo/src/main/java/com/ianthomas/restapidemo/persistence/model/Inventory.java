@@ -1,10 +1,12 @@
 package com.ianthomas.restapidemo.persistence.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 
-
 @Entity
-@Table
 public class Inventory {
     @Id
     @SequenceGenerator(name = "inv", initialValue = 1000)
@@ -13,22 +15,16 @@ public class Inventory {
     private String itemName;          // Unique
     private float price;
 
-    @ManyToOne private Supplier supplier;        // FK of Supplier
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @ManyToOne (optional = false, fetch = FetchType.LAZY)
+    private Supplier supplier;                   // FK of Supplier
 
-    @ManyToOne
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "purchasedBy")
     private Customer customer;                   // FK of Customer
 
 
-
-
-
-
-
-    public Inventory(String itemName, float price) {
-        this.itemName = itemName;
-        this.price = price;
-    }
 
     public Inventory(String itemName, float price, Supplier supplier) {
         this.itemName = itemName;
