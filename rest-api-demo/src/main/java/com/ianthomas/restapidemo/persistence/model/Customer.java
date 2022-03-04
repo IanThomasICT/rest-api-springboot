@@ -1,5 +1,6 @@
 package com.ianthomas.restapidemo.persistence.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -13,7 +14,6 @@ public class Customer {
     private String name;
     private String email;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private Set<Inventory> items = new HashSet<>();
 

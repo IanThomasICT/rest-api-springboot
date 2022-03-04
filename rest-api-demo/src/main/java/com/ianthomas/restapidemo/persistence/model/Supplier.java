@@ -1,27 +1,24 @@
 package com.ianthomas.restapidemo.persistence.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.ianthomas.restapidemo.persistence.model.Inventory;
+import com.ianthomas.restapidemo.exception.InvalidArgumentsException;
+import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table
 public class Supplier {
-    @Id
-    @SequenceGenerator(name = "sup", initialValue = 0, allocationSize = 10)
-    @GeneratedValue (strategy = GenerationType.AUTO, generator = "sup")
-    private Integer id;
-    private String name;
-    private String location;
+    @Id @GeneratedValue private Integer id;
+    @NotNull private String name;
+    @NotNull private String location;
 
-    @JsonManagedReference
-    @OneToMany (mappedBy = "supplier", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @OneToMany (mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Inventory> exports = new HashSet<>();
-
-
 
     public Supplier(String name, String location, Set<Inventory> exports) {
         this.name = name;
@@ -30,8 +27,17 @@ public class Supplier {
     }
 
     public Supplier(String name, String location) {
-        this.name = name;
-        this.location = location;
+        try {
+            Objects.requireNonNull(name,"Invalid Supplier name: null value");
+            Objects.requireNonNull(location,"Invalid Supplier location: null value");
+            if (name.length() > 5) { this.name = name; }
+            else { throw new InvalidArgumentsException("Supplier name must be 5 characters or more");}
+
+            if (location.length() > 5) { this.location = location; }
+            else { throw new InvalidArgumentsException("Supplier location must be 5 characters or more");}
+        } catch (NullPointerException e) {
+            throw new InvalidArgumentsException(e.getMessage(), e);
+        }
     }
 
     public Supplier() {

@@ -1,7 +1,10 @@
 package com.ianthomas.restapidemo.rest.controller;
 
+import com.ianthomas.restapidemo.rest.dto.ResponseDto;
 import com.ianthomas.restapidemo.service.InventoryService;
 import com.ianthomas.restapidemo.persistence.model.Inventory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,43 +14,50 @@ import java.util.List;
 @RequestMapping(path = "api/v1/inventory")
 public class InventoryController {
 
-    private InventoryService inventoryService;
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+
+    private final InventoryService inventoryService;
 
     @Autowired
     public InventoryController(InventoryService inventoryService) {
         this.inventoryService = inventoryService;
     }
 
-    @GetMapping
+    @GetMapping(produces = {"application/json", "text/json"})
     public List<Inventory> getInventoryItems() {
         return inventoryService.getInventoryItems();
     }
 
-    @GetMapping(path = "available")
+    @GetMapping(path = "available", produces = {"application/json", "text/json"})
     public List<Inventory> getAvailableInventory() {
         return inventoryService.getAvailableInventory();
     }
 
-    @GetMapping(path = "purchased")
+    @GetMapping(path = "purchased", produces = {"application/json", "text/json"})
     public List<Inventory> getPurchasedInventory() {
         return inventoryService.getPurchasedInventory();
     }
 
-    // Map POST request to database
-    @PostMapping
-    public void addInventory(@RequestBody Inventory inventory) {
-        if (inventory.getProductId() < 1000) { throw new IllegalStateException("Invalid: id must be greater than 1000"); }
-        inventoryService.addInventory(inventory);
-    }
-
-    @DeleteMapping(path = "{productId}")
-    public void deleteInventory(@PathVariable("productId") Integer productId) {
-        if (productId < 1000) { throw new IllegalStateException("Invalid: id must be greater than 1000"); }
+    @DeleteMapping(path = "{productId}", produces = {"application/json", "text/json"})
+    public ResponseDto deleteInventory(@PathVariable("productId") Integer productId) {
         inventoryService.deleteInventory(productId);
+        LOG.info("Deleted inventory item: {}",productId);
+        return new ResponseDto("success", "Inventory deleted successfully.");
     }
 
-    @PutMapping(path = "{productId}")
-    public void updateInventory(
+    // Map POST request to database
+    @PostMapping(consumes = {"application/json"}, produces = {"application/json", "text/json"})
+    public ResponseDto addInventory(@RequestBody Inventory inventory) {
+        inventoryService.addInventory(inventory);
+        LOG.info("Added inventory item: {}",inventory.getProductId());
+        return new ResponseDto("success", "Inventory added successfully.");
+
+    }
+
+
+
+    @PutMapping(path = "{productId}", consumes = {"application/json"}, produces = {"application/json", "text/json"})
+    public ResponseDto updateInventory(
             @PathVariable("productId") Integer productId,
             @RequestParam(required = false) String itemName,
             @RequestParam(required = false) Float itemPrice,
@@ -55,7 +65,9 @@ public class InventoryController {
             @RequestParam(required = false) String supplierName,
             @RequestParam(required = false) String supplierAddress) {
 
-        if (productId < 1000) { throw new IllegalStateException("Invalid: id must be greater than 1000"); }
         inventoryService.updateInventory(productId, itemName, itemPrice, supplierId, supplierName, supplierAddress);
+        LOG.info("Updated inventory item: {}",productId);
+        return new ResponseDto("success", "Inventory updated successfully.");
+
     }
 }

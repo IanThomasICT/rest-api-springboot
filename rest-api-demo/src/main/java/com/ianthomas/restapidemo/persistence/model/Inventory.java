@@ -2,6 +2,7 @@ package com.ianthomas.restapidemo.persistence.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
@@ -10,20 +11,18 @@ import javax.persistence.*;
 public class Inventory {
     @Id
     @SequenceGenerator(name = "inv", initialValue = 1000)
-    @GeneratedValue (strategy = GenerationType.AUTO, generator = "inv")
+    @GeneratedValue (strategy = GenerationType.IDENTITY, generator = "inv")
     private int productId;            // Primary Key
     private String itemName;          // Unique
     private float price;
 
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @ManyToOne (optional = false, fetch = FetchType.LAZY)
     private Supplier supplier;                   // FK of Supplier
 
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "purchasedBy")
     private Customer customer;                   // FK of Customer
-
 
 
     public Inventory(String itemName, float price, Supplier supplier) {
@@ -59,12 +58,18 @@ public class Inventory {
         this.itemName = itemName;
     }
 
+    @JsonIgnore
     public Supplier getSupplier() {
         return supplier;
     }
 
+    @JsonIgnore
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
+    }
+
+    public String getSupplierName() {
+        return supplier.getName();
     }
 
     public float getPrice() {
@@ -75,10 +80,12 @@ public class Inventory {
         this.price = price;
     }
 
+    @JsonIgnore
     public Customer getCustomer() {
         return customer;
     }
 
+    @JsonIgnore
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }

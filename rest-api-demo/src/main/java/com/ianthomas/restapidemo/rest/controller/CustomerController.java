@@ -1,17 +1,23 @@
 package com.ianthomas.restapidemo.rest.controller;
 
-import com.ianthomas.restapidemo.persistence.exception.ApplicationException;
 import com.ianthomas.restapidemo.persistence.model.Customer;
+import com.ianthomas.restapidemo.persistence.model.Inventory;
+import com.ianthomas.restapidemo.rest.dto.ResponseDto;
 import com.ianthomas.restapidemo.service.CustomerService;
+import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(path = "api/v1/customers")
 public class CustomerController {
+
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     private final CustomerService customerService;
 
@@ -20,48 +26,37 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping
+    @GetMapping(produces = {"application/json", "text/json"})
     public List<Customer> getCustomers(){
         return customerService.getCustomers();
     }
 
-    @PostMapping
-    public void addCustomer(@RequestBody Customer customer) {
-        try {
-            customerService.addCustomer(customer);
-        } catch (ApplicationException ae){
+    @DeleteMapping(path = "{id}", produces = {"application/json", "text/json"})
+    public ResponseDto deleteCustomer(@PathVariable("id") Integer id) {
+        customerService.deleteCustomer(id);
+        LOG.info("Deleted Customer {}",id);
+        return new ResponseDto("success", "Customer deleted successfully.");
 
-        } catch (Exception e){
-        }
     }
 
-    @PutMapping(path = "{id}")
-    public void updateCustomer(@PathVariable("id") Integer id,
+    @PostMapping(consumes = {"application/json"}, produces = {"application/json", "text/json"})
+    public ResponseDto addCustomer(@RequestBody Customer customer) {
+        customerService.addCustomer(customer);
+        LOG.info("Added Customer {}",customer.getId());
+        return new ResponseDto("success", "Customer added successfully.");
+
+    }
+
+    @PutMapping(path = "{id}", consumes = {"application/json"}, produces = {"application/json", "text/json"})
+    public ResponseDto updateCustomer(@PathVariable("id") Integer id,
                                @RequestParam(required = false) String name,
-                               @RequestParam(required = false) String email) {
-        try {
-            customerService.updateCustomer(id, name, email);
-            // Statement 1
-            // Statement 2
-            // Statement 3
-        } catch (ApplicationException ae){
-            // Any error thrown from Service layer is caught here
-        } catch (Exception e){
-            // logger.error(e)
-            throw HttpResponse<>
-        }
+                               @RequestParam(required = false) String email,
+                               @RequestParam(required = false) Set<Inventory> items) {
+        customerService.updateCustomer(id, name, email, items);
+        LOG.info("Updated Customer {}",id);
+        return new ResponseDto("success", "Customer updated successfully.");
     }
 
-    @DeleteMapping(path = "{id}")
-    public void deleteCustomer(@PathVariable("id") Integer id) {
-        try {
-            customerService.deleteCustomer(id);
-        } catch (ApplicationException ae){
-
-        } catch (Exception e){
-
-        }
-    }
 
 
 }

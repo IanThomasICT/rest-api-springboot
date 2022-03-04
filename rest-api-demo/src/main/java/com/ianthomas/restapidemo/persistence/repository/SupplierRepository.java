@@ -10,9 +10,9 @@ import java.util.Optional;
 public interface SupplierRepository extends JpaRepository<Supplier, Integer> {
 
     // Query Example
-    @Query("SELECT s FROM Supplier s WHERE s.id = ?1")
-    Optional<Supplier> findSupplierBySupplierId(int id);
-
     @Query("FROM Supplier s ORDER BY s.id ASC")
-    List<Supplier> findAllOrderBySupplierId();
+    List<Supplier> getSortedSuppliers();
+
+    @Query("SELECT s FROM Supplier s WHERE s.name = ?1")
+    Optional<Supplier> findBySupplierName(String name);
 }
