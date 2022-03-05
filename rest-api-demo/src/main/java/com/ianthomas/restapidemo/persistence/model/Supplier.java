@@ -13,7 +13,7 @@ import java.util.Set;
 @Entity
 @Table
 public class Supplier {
-    @Id @GeneratedValue private Integer id;
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE) private Integer id;
     @NotNull private String name;
     @NotNull private String location;
 
@@ -30,10 +30,10 @@ public class Supplier {
         try {
             Objects.requireNonNull(name,"Invalid Supplier name: null value");
             Objects.requireNonNull(location,"Invalid Supplier location: null value");
-            if (name.length() > 5) { this.name = name; }
+            if (name.length() >= 5) { this.name = name; }
             else { throw new InvalidArgumentsException("Supplier name must be 5 characters or more");}
 
-            if (location.length() > 5) { this.location = location; }
+            if (location.length() >= 5) { this.location = location; }
             else { throw new InvalidArgumentsException("Supplier location must be 5 characters or more");}
         } catch (NullPointerException e) {
             throw new InvalidArgumentsException(e.getMessage(), e);

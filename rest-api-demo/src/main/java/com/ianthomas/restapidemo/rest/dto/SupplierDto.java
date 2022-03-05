@@ -1,5 +1,6 @@
 package com.ianthomas.restapidemo.rest.dto;
 
+import com.ianthomas.restapidemo.exception.InvalidArgumentsException;
 import com.ianthomas.restapidemo.persistence.model.Supplier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,12 +13,14 @@ public class SupplierDto implements Serializable {
 
     private String name;
     private String location;
-    private Supplier supplier = null;
+
+    public SupplierDto(String oneParam) {
+        throw new InvalidArgumentsException("Invalid Supplier input: need two string values 'name' and 'location'");
+    }
 
     public SupplierDto(String name, String location) {
         this.name = name;
         this.location = location;
-        this.supplier = new Supplier(name, location);
     }
 
     public String getName() {
@@ -28,8 +31,8 @@ public class SupplierDto implements Serializable {
         return location;
     }
 
-    public Supplier getSupplier() {
-        return supplier;
+    public Supplier toSupplier(){
+        return new Supplier(this.name, this.location);
     }
 
 }

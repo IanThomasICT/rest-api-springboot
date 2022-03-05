@@ -39,7 +39,7 @@ public class SupplierController {
     // Map POST request to database
     @PostMapping(consumes = {"application/json"}, produces = {"application/json", "text/json"})
     public ResponseDto addSupplier(@RequestBody SupplierDto supplierDto) {
-        return new ResponseDto("success", "Supplier added successfully.", supplierService.addSupplier(supplierDto.getSupplier()));
+        return new ResponseDto("success", "Supplier added successfully.", supplierService.addSupplier(supplierDto.toSupplier()));
     }
 
     @PutMapping(path = "{id}", consumes = {"application/json"}, produces = {"application/json", "text/json"})
