@@ -13,7 +13,8 @@ import java.util.Set;
 @Entity
 @Table
 public class Supplier {
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE) private Integer id;
+    @Id @SequenceGenerator(name = "sup", sequenceName = "sup", initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sup") private Integer id;
     @NotNull private String name;
     @NotNull private String location;
 
@@ -42,6 +43,14 @@ public class Supplier {
 
     public Supplier() {
 
+    }
+
+    public Supplier Supplier(Supplier s) {
+        this.id = s.getId();
+        this.name = s.getName();
+        this.location = s.getLocation();
+        this.exports = s.getExports();
+        return this;
     }
 
     public Integer getId() {

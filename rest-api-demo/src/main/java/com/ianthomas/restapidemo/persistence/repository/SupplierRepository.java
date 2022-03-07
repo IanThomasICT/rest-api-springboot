@@ -15,4 +15,16 @@ public interface SupplierRepository extends JpaRepository<Supplier, Integer> {
 
     @Query("SELECT s FROM Supplier s WHERE s.name = ?1")
     Optional<Supplier> findBySupplierName(String name);
+
+    @Query("SELECT s FROM Supplier s WHERE s.name = ?1")
+    List<Supplier> getByName(String name);
+
+    @Query("SELECT s FROM Supplier s WHERE s.location = ?1")
+    List<Supplier> getByLocation(String location);
+
+    @Query("SELECT s FROM Supplier s WHERE s.id = ?1")
+    List<Supplier> getByIds(Integer id);
+
+    @Query("SELECT s FROM Supplier s WHERE s.name = ?1 AND s.location = ?2")
+    List<Supplier> getByNameAndLocation(String name, String location);
 }
