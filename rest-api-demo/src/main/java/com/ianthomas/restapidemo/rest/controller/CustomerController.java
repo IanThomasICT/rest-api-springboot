@@ -36,15 +36,11 @@ public class CustomerController {
         customerService.deleteCustomer(id);
         LOG.info("Deleted Customer {}",id);
         return new ResponseDto("success", "Customer deleted successfully.");
-
     }
 
     @PostMapping(consumes = {"application/json"}, produces = {"application/json", "text/json"})
     public ResponseDto addCustomer(@RequestBody Customer customer) {
-        customerService.addCustomer(customer);
-        LOG.info("Added Customer {}",customer.getId());
-        return new ResponseDto("success", "Customer added successfully.");
-
+        return new ResponseDto("success", "Customer added successfully.", customerService.addCustomer(customer));
     }
 
     @PutMapping(path = "{id}", consumes = {"application/json"}, produces = {"application/json", "text/json"})
@@ -52,9 +48,7 @@ public class CustomerController {
                                @RequestParam(required = false) String name,
                                @RequestParam(required = false) String email,
                                @RequestParam(required = false) Set<Inventory> items) {
-        customerService.updateCustomer(id, name, email, items);
-        LOG.info("Updated Customer {}",id);
-        return new ResponseDto("success", "Customer updated successfully.");
+        return new ResponseDto("success", "Customer updated successfully.",customerService.updateCustomer(id, name, email, items));
     }
 
 

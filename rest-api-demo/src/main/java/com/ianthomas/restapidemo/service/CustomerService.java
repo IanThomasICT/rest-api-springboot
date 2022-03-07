@@ -7,6 +7,8 @@ import com.ianthomas.restapidemo.persistence.model.Customer;
 import com.ianthomas.restapidemo.persistence.model.Inventory;
 import com.ianthomas.restapidemo.persistence.repository.CustomerRepository;
 import com.ianthomas.restapidemo.persistence.repository.InventoryRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,33 +21,30 @@ import java.util.Set;
 @Service
 public class CustomerService {
 
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
     private final CustomerRepository customerRepository;
-    private final InventoryRepository inventoryRepository;
 
     @Autowired
     public CustomerService(CustomerRepository customerRepository, InventoryRepository inventoryRepository) {
         this.customerRepository = customerRepository;
-        this.inventoryRepository = inventoryRepository;
     }
 
     public List<Customer> getCustomers() {
         return customerRepository.findCustomersById();
     }
 
-    public void addCustomer(Customer customer) {
-        Optional<Customer> idMatch = customerRepository.findCustomerById(customer.getId());
-        if (idMatch.isPresent())
-            throw new ItemAlreadyExistsException("Customer id " + customer.getId() + " already exists");
-
+    public Customer addCustomer(Customer customer) {
         Optional<Customer> emailMatch = customerRepository.findCustomerByEmail(customer.getEmail());
         if (emailMatch.isPresent())
             throw new ItemAlreadyExistsException("Customer email " + customer.getEmail() + " already exists");
 
         customerRepository.save(customer);
+        LOG.info("Added Customer {}",customer.getId());
+        return customer;
     }
 
     @Transactional
-    public void updateCustomer(int id, String name, String email, Set<Inventory> items) {
+    public Customer updateCustomer(int id, String name, String email, Set<Inventory> items) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new ItemNotFoundException("Customer id " + id + " does not exist"));
 
@@ -53,8 +52,11 @@ public class CustomerService {
             customer.setName(name);
         if (!Objects.equals(customer.getEmail(), email) && email.length() > 0)
             customer.setEmail(email);
+        if (!Objects.equals(customer.getItems(), items) && !items.isEmpty())
+            customer.setItems(items);
 
-        System.out.println("Updated customer: " + id + ".");
+        LOG.info("Updated Customer {}",id);
+        return customer;
     }
 
     public void deleteCustomer(Integer id) {
@@ -62,10 +64,10 @@ public class CustomerService {
             throw new InvalidInputException("Invalid: id must be a positive value");
 
         boolean exists = customerRepository.existsById(id);
-        if (exists)
-            customerRepository.deleteById(id);
+        if (!exists)
+            throw new ItemNotFoundException("Customer id " + id + " does not exist");
 
-
-        System.out.println("Deleted customer: " + id + ".");
+        customerRepository.deleteById(id);
+        LOG.info("Deleted customer {}", id);
     }
 }

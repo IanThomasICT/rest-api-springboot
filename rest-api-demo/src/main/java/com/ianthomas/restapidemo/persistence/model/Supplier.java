@@ -30,7 +30,7 @@ public class Supplier {
         try {
             Objects.requireNonNull(name,"Invalid Supplier name: null value");
             Objects.requireNonNull(location,"Invalid Supplier location: null value");
-            if (name.length() >= 5) { this.name = name; }
+            if (name.length() >= 5) { this.name = name; }       // Arbitrary length
             else { throw new InvalidArgumentsException("Supplier name must be 5 characters or more");}
 
             if (location.length() >= 5) { this.location = location; }

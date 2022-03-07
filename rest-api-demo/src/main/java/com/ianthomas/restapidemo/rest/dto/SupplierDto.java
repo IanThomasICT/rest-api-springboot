@@ -1,22 +1,13 @@
 package com.ianthomas.restapidemo.rest.dto;
 
-import com.ianthomas.restapidemo.exception.InvalidArgumentsException;
 import com.ianthomas.restapidemo.persistence.model.Supplier;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.io.Serializable;
-import java.util.Objects;
-
-public class SupplierDto implements Serializable {
-    private static final long serialVersionUID = 7279580124456060304L;
+public class SupplierDto {
+    // Used to construct supplier objects from JSON data since
+    // JPA constructs using no-arg constructor if RequestBody is passed directly into entity
 
     private String name;
     private String location;
-
-    public SupplierDto(String oneParam) {
-        throw new InvalidArgumentsException("Invalid Supplier input: need two string values 'name' and 'location'");
-    }
 
     public SupplierDto(String name, String location) {
         this.name = name;
@@ -27,12 +18,21 @@ public class SupplierDto implements Serializable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getLocation() {
         return location;
     }
 
-    public Supplier toSupplier(){
-        return new Supplier(this.name, this.location);
+    public void setLocation(String location) {
+        this.location = location;
     }
 
+
+    // Always constructs supplier using the two param constructor
+    public Supplier toSupplier() {
+        return new Supplier(this.name, this.location);
+    }
 }

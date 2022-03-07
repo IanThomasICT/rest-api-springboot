@@ -1,5 +1,6 @@
 package com.ianthomas.restapidemo.rest.controller;
 
+import com.ianthomas.restapidemo.persistence.model.Inventory;
 import com.ianthomas.restapidemo.rest.dto.ResponseDto;
 import com.ianthomas.restapidemo.rest.dto.SupplierDto;
 import com.ianthomas.restapidemo.service.SupplierService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(path = "api/v1/suppliers")
@@ -27,7 +29,17 @@ public class SupplierController {
 
     @GetMapping(produces = {"application/json", "text/json"})
     public List<Supplier> getSuppliers() {
-        return supplierService.getSupplierItems();
+        return supplierService.getSuppliers();
+    }
+
+    @GetMapping(path = "name/{name}", produces = {"application/json", "text/json"})
+    public ResponseDto getSupplierByName(@PathVariable("name") String name) {
+        return new ResponseDto("success", "Supplier retrieved successfully", supplierService.getSupplierByName(name));
+    }
+
+    @GetMapping(path = "{id}", produces = {"application/json", "text/json"})
+    public ResponseDto getSupplier(@PathVariable("id") Integer id) {
+        return new ResponseDto("success", "Supplier retrieved successfully", supplierService.getSupplier(id));
     }
 
     @DeleteMapping(path = "{id}", produces = {"application/json", "text/json"})
@@ -45,8 +57,10 @@ public class SupplierController {
     @PutMapping(path = "{id}", consumes = {"application/json"}, produces = {"application/json", "text/json"})
     public ResponseDto updateSupplier(
             @PathVariable("id") Integer id,
-            @RequestParam(required = false) String supplierName) {
-        return new ResponseDto("success", "Supplier updated successfully.", supplierService.updateSupplier(id, supplierName));
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Set<Inventory> exports) {
+        return new ResponseDto("success", "Supplier updated successfully.", supplierService.updateSupplier(id, name, location, exports));
 
     }
 }

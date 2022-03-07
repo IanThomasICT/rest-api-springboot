@@ -22,7 +22,6 @@ public class ExceptionHandlerController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     protected ResponseDto handleInvalidInputException(HttpServletRequest req, InvalidInputException ex){
-        ex.printStackTrace();
         LOG.warn("Invalid Input Exception : {}",ex.getMessage());
         return new ResponseDto("error", ex.getMessage());      // Returns error response
     }

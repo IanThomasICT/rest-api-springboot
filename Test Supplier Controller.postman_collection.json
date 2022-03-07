@@ -1,328 +1,478 @@
 {
 	"info": {
-		"_postman_id": "8009660f-b047-4d10-b7b0-b4dbdf94056f",
-		"name": "Test Supplier Controller",
+		"_postman_id": "5917948f-8869-4fc5-896a-78b1cb6f6740",
+		"name": "Testing",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Get Suppliers",
-			"event": [
+			"name": "Suppliers",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status test\",function() {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Contains items test\", function() {\r",
-							"    pm.response.to.not.have.jsonBody(\"\");\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/api/v1/suppliers",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"v1",
-						"suppliers"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add Supplier",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status test\", function() {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Successful addition test\", function() {\r",
-							"    pm.response.to.have.jsonBody(\"success\");\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"location\": \"Derby, KS\",\r\n    \"name\": \"Meats Corp Midwest\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "CRUD Testing",
+					"item": [
+						{
+							"name": "Setup",
+							"item": [
+								{
+									"name": "Get Suppliers",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var statusCode = 200;\r",
+													"var responseStatus = \"\";\r",
+													"var responseMessage = \"\"\r",
+													"\r",
+													"// Tests Response Code, Status, and Message to match above variables\r",
+													"// Also runs standard Response time and Content-Type header tests\r",
+													"eval(globals.commonTests)();\r",
+													"\r",
+													"pm.test(\"Contains suppliers\", function() {\r",
+													"    pm.response.to.not.have.jsonBody(\"\");\r",
+													"});\r",
+													"\r",
+													"tests[\"Testing environment set\"] = pm.environment.name == \"Testing\";\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/suppliers",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"suppliers"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add Supplier",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var statusCode = 200;\r",
+													"var responseStatus = \"success\";\r",
+													"var responseMessage = \"added\"\r",
+													"\r",
+													"// Tests Response Code, Status, and Message to match above variables\r",
+													"// Also runs standard Response time and Content-Type header tests\r",
+													"eval(globals.commonTests)();\r",
+													"\r",
+													"let responseJson = pm.response.json()\r",
+													"postman.setEnvironmentVariable(\"supplierName\", responseJson.object.name);\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {}
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"location\": \"Derby, KS\",\r\n    \"name\": \"Meats Corp Midwest\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/suppliers",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"suppliers"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Supplier ID by Name",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var statusCode = 200;\r",
+													"var responseStatus = \"success\";\r",
+													"var responseMessage = \"retrieved successfully\"\r",
+													"\r",
+													"// Tests Response Code, Status, and Message to match above variables\r",
+													"// Also runs standard Response time and Content-Type header tests\r",
+													"eval(globals.commonTests)();\r",
+													"\r",
+													"let responseJson = pm.response.json();\r",
+													"postman.setEnvironmentVariable(\"supplierID\",responseJson.object.id);\r",
+													"postman.setEnvironmentVariable(\"supplierLoc\",responseJson.object.location);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/suppliers/name/{{supplierName}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"suppliers",
+												"name",
+												"{{supplierName}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Test",
+							"item": [
+								{
+									"name": "Add Duplicate Supplier",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var statusCode = 400;\r",
+													"var responseStatus = \"error\";\r",
+													"var responseMessage = \"Supplier already exists\"\r",
+													"\r",
+													"// Tests Response Code, Status, and Message to match above variables\r",
+													"// Also runs standard Response time and Content-Type header tests\r",
+													"eval(globals.commonTests)();\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {}
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"location\": \"{{supplierLoc}}\",\r\n    \"name\": \"{{supplierName}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/suppliers",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"suppliers"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add Incomplete Supplier",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var statusCode = 400;\r",
+													"var responseStatus = \"error\";\r",
+													"var responseMessage = \"Invalid Supplier\"\r",
+													"\r",
+													"// Tests Response Code, Status, and Message to match above variables\r",
+													"// Also runs standard Response time and Content-Type header tests\r",
+													"eval(globals.commonTests)();\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {}
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"location\": \"Derb\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/suppliers",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"suppliers"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add Short Supplier",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var statusCode = 400;\r",
+													"var responseStatus = \"error\";\r",
+													"var responseMessage = \"must be 5 characters or more\"\r",
+													"\r",
+													"// Tests Response Code, Status, and Message to match above variables\r",
+													"// Also runs standard Response time and Content-Type header tests\r",
+													"eval(globals.commonTests)();\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {}
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"location\": \"Derb\",\r\n    \"name\": \"Meaty puffs\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/suppliers",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"suppliers"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Name and Location",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var statusCode = 200;\r",
+													"var responseStatus = \"success\";\r",
+													"var responseMessage = \"updated successfully\"\r",
+													"\r",
+													"// Tests Response Code, Status, and Message to match above variables\r",
+													"// Also runs standard Response time and Content-Type header tests\r",
+													"eval(globals.commonTests)();\r",
+													"\r",
+													"let responseJson = pm.response.json();\r",
+													"tests[\"Name and location changed\"] = (pm.environment.get(\"supplierName\") != responseJson.object.name && pm.environment.get(\"supplierLoc\") != responseJson.object.location);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/v1/suppliers/{{supplierID}}?name=James Pig Farm&location=Nashville, TN",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"suppliers",
+												"{{supplierID}}"
+											],
+											"query": [
+												{
+													"key": "name",
+													"value": "James Pig Farm"
+												},
+												{
+													"key": "location",
+													"value": "Nashville, TN"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Teardown",
+							"item": [
+								{
+									"name": "Delete Existing Supplier",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var statusCode = 200;\r",
+													"var responseStatus = \"success\";\r",
+													"var responseMessage = \"deleted successfully\"\r",
+													"\r",
+													"// Tests Response Code, Status, and Message to match above variables\r",
+													"// Also runs standard Response time and Content-Type header tests\r",
+													"eval(globals.commonTests)();\r",
+													"\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/suppliers/{{supplierID}}",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"suppliers",
+												"{{supplierID}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Nonexistent Supplier",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var statusCode = 404;\r",
+													"var responseStatus = \"error\";\r",
+													"var responseMessage = \"does not exist\"\r",
+													"\r",
+													"// Tests Response Code, Status, and Message to match above variables\r",
+													"// Also runs standard Response time and Content-Type header tests\r",
+													"eval(globals.commonTests)();\r",
+													"\r",
+													"tests[\"Cleared environment variables\"] = pm.expect(pm.environment.clear());\r",
+													"\r",
+													"\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/api/v1/suppliers/-1",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"v1",
+												"suppliers",
+												"-1"
+											]
+										}
+									},
+									"response": []
+								}
+							]
 						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/v1/suppliers",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"v1",
-						"suppliers"
 					]
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add Duplicate Supplier",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Bad request status test\", function() {\r",
-							"    pm.response.to.have.status(400);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Duplicate exception response\", function() {\r",
-							"    pm.response.to.have.jsonBody({\"message\":\"Supplier already exists\"});\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"location\": \"Derby, KS\",\r\n    \"name\": \"Meats Corp Midwest\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/v1/suppliers",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"v1",
-						"suppliers"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add Incomplete Supplier",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Bad request status test\", function() {\r",
-							"    pm.response.to.have.status(400);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Duplicate exception response\", function() {\r",
-							"    pm.response.to.have.jsonBody({\"message\":\"Incomplete JSON data\"});\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"location\": \"Derb\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/v1/suppliers",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"v1",
-						"suppliers"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add Invalid Supplier Copy",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Bad request status test\", function() {\r",
-							"    pm.response.to.have.status(400);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Duplicate exception response\", function() {\r",
-							"    pm.response.to.have.jsonBody({\"message\":\"Supplier already exists\"});\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {}
-			},
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"location\": \"Derby, KS\",\r\n    \"name\": \"Meats Corp Midwest\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/api/v1/suppliers",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"v1",
-						"suppliers"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Supplier 2",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status test\", function() {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Deletion status\", function() {\r",
-							"    const responseJson = pm.response.json();\r",
-							"    pm.expect(responseJson.status).to.eql(\"does not exist\");\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/api/v1/suppliers/2",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"v1",
-						"suppliers",
-						"2"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Nonexistent Supplier",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status test\", function() {\r",
-							"    pm.response.to.have.status(404);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Deletion status\", function() {\r",
-							"    const responseJson = pm.response.json();\r",
-							"    pm.expect(responseJson.status).to.eql(\"error\");\r",
-							"    pm.expect(responseJson.message).to.have(\"does not exist\");\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/api/v1/suppliers/2",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"v1",
-						"suppliers",
-						"2"
-					]
-				}
-			},
-			"response": []
+			]
 		}
 	]
 }
