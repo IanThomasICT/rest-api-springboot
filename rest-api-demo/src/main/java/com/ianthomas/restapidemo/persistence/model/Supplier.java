@@ -45,14 +45,6 @@ public class Supplier {
 
     }
 
-    public Supplier Supplier(Supplier s) {
-        this.id = s.getId();
-        this.name = s.getName();
-        this.location = s.getLocation();
-        this.exports = s.getExports();
-        return this;
-    }
-
     public Integer getId() {
         return id;
     }
