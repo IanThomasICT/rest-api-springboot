@@ -13,7 +13,8 @@ import java.util.Set;
 @Entity
 @Table
 public class Supplier {
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE) private Integer id;
+    @Id @SequenceGenerator(name = "sup", sequenceName = "sup", initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sup") private Integer id;
     @NotNull private String name;
     @NotNull private String location;
 

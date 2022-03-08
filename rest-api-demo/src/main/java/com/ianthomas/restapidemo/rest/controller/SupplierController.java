@@ -8,6 +8,7 @@ import com.ianthomas.restapidemo.persistence.model.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,13 +29,9 @@ public class SupplierController {
     }
 
     @GetMapping(produces = {"application/json", "text/json"})
-    public List<Supplier> getSuppliers() {
-        return supplierService.getSuppliers();
-    }
-
-    @GetMapping(path = "name/{name}", produces = {"application/json", "text/json"})
-    public ResponseDto getSupplierByName(@PathVariable("name") String name) {
-        return new ResponseDto("success", "Supplier retrieved successfully", supplierService.getSupplierByName(name));
+    public List<Supplier> getSuppliers(@RequestParam(required = false) String name,
+                                       @RequestParam(required = false) String location) {
+        return supplierService.getSuppliers(name, location);
     }
 
     @GetMapping(path = "{id}", produces = {"application/json", "text/json"})

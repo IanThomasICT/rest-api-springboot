@@ -28,8 +28,13 @@ public class SupplierService {
         this.supplierRepository = supplierRepository;
     }
 
-    public List<Supplier> getSuppliers() {
-        return supplierRepository.getSortedSuppliers();
+    public List<Supplier> getSuppliers(String name, String location) {
+        if (name != null)
+            return supplierRepository.getByName(name);
+        else if (location != null)
+            return supplierRepository.getByLocation(location);
+        else
+            return supplierRepository.getSortedSuppliers();
     }
 
     public Optional<Supplier> getSupplier(Integer id) { return supplierRepository.findById(id); }

@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @Table
 public class Customer {
-    @Id @GeneratedValue private Integer id;
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE) private Integer id;
     private String name;
     private String email;
 
