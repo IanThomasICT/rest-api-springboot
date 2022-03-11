@@ -1,38 +1,82 @@
 package com.ianthomas.restapidemo.persistence.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.ianthomas.restapidemo.exception.InvalidArgumentsException;
+import com.sun.istack.NotNull;
+import org.elasticsearch.common.xcontent.XContentBuilder;
 
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.io.IOException;
+import java.util.Objects;
 
 @Entity
-@Table
-public class Customer {
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE) private Integer id;
-    private String name;
-    private String email;
+public class Customer extends PersistentEntity{
 
-    @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    private Set<Inventory> items = new HashSet<>();
+    @Id private Integer id;
+    @NotNull private String companyName;
+    @NotNull private String contactFirstName;
+    @NotNull private String contactLastName;
+    @NotNull private String addressLine1;
+    @NotNull private String city;
+    @NotNull @Column(length = 15) private String postalCode;
+    @NotNull private String country;
 
-    public Customer(String name, String email) {
-        this.name = name;
-        this.email = email;
-    }
+    private String phone;
+    private String addressLine2;
+    private String state;
 
-    public Customer(String name, String email, Set<Inventory> items) {
-        this.name = name;
-        this.email = email;
-        this.items = items;
+    public Customer(Integer id, String companyName, String contactFirstName, String contactLastName, String phone, String addressLine1, String addressLine2, String city, String state, String postalCode, String country) {
+
+        try {
+            Objects.requireNonNull(id, "Invalid id: null value");
+            Objects.requireNonNull(companyName, "Invalid companyName: null value");
+            Objects.requireNonNull(contactFirstName, "Invalid first name: null value");
+            Objects.requireNonNull(contactLastName, "Invalid last name: null value");
+            Objects.requireNonNull(addressLine1, "Invalid address: null value");
+            Objects.requireNonNull(city, "Invalid city: city cannot be null");
+            Objects.requireNonNull(postalCode, "Invalid postalCode: null value");
+            Objects.requireNonNull(country, "Invalid country: null value");
+        } catch (NullPointerException e) {
+            throw new InvalidArgumentsException(e.getMessage(), e);
+        }
+        this.id = id;
+        this.companyName = companyName;
+        this.contactFirstName = contactFirstName;
+        this.contactLastName = contactLastName;
+        this.phone = phone;
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.city = city;
+        this.state = state;
+        this.postalCode = postalCode;
+        this.country = country;
     }
 
     public Customer() {
 
     }
 
-    // Getters are used by JPA to populate repository data
+
+    @Override
+    public XContentBuilder updateBuilderFields(XContentBuilder builder) throws IOException {
+        builder = super.updateBuilderFields(builder)
+                .field("customerId",id)
+                .field("companyName",companyName)
+                .field("contactFirstName",contactFirstName)
+                .field("contactLastName",contactLastName)
+                .field("phone",phone)
+                .field("addressLine1",addressLine1)
+                .field("addressLine2",addressLine2)
+                .field("city",city)
+                .field("state",state)
+                .field("postalCode",postalCode)
+                .field("country",country);
+        return builder;
+    }
+
+
+
 
     public Integer getId() {
         return id;
@@ -42,31 +86,83 @@ public class Customer {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
-    public String getEmail() {
-        return email;
+    public String getContactFirstName() {
+        return contactFirstName;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setContactFirstName(String contactFirstName) {
+        this.contactFirstName = contactFirstName;
     }
 
-    public Set<Inventory> getItems() {
-        return items;
+    public String getContactLastName() {
+        return contactLastName;
     }
 
-    public void setItems(Set<Inventory> items) {
-        this.items = items;
+    public void setContactLastName(String contactLastName) {
+        this.contactLastName = contactLastName;
+    }
 
-        for (Inventory i : items){
-            i.setCustomer(this);
-        }
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddressLine1() {
+        return addressLine1;
+    }
+
+    public void setAddressLine1(String addressLine1) {
+        this.addressLine1 = addressLine1;
+    }
+
+    public String getAddressLine2() {
+        return addressLine2;
+    }
+
+    public void setAddressLine2(String addressLine2) {
+        this.addressLine2 = addressLine2;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

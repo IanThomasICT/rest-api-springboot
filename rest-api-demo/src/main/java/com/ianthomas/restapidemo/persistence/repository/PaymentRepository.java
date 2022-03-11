@@ -3,6 +3,6 @@ package com.ianthomas.restapidemo.persistence.repository;
 import com.ianthomas.restapidemo.persistence.model.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CustomerRepository extends JpaRepository<Customer, Integer> {
+public interface PaymentRepository extends JpaRepository<Customer, Integer> {
 
 }

@@ -17,6 +17,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'mysql:mysql-connector-java:8.0.25'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.elasticsearch:elasticsearch:7.4.2'
+    implementation 'org.elasticsearch.client:transport:7.4.2'
+    implementation 'org.elasticsearch.plugin:transport-netty4-client:7.4.2'
+    implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.4.2'
 }
 
 tasks.named('test') {

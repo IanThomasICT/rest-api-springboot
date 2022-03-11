@@ -1,6 +1,7 @@
 package com.ianthomas.restapidemo.rest.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class ResponseDto implements Serializable {
 
@@ -8,6 +9,7 @@ public class ResponseDto implements Serializable {
     private String status;
     private String message;
     private Object object;
+    private List<Object> objects;
 
     public ResponseDto(String status, String message) {
         this.status = status;
@@ -18,6 +20,12 @@ public class ResponseDto implements Serializable {
         this.status = status;
         this.message = message;
         this.object = object;
+    }
+
+    public ResponseDto(String status, String message, List<Object> objects) {
+        this.status = status;
+        this.message = message;
+        this.objects = objects;
     }
 
     public String getStatus() {
