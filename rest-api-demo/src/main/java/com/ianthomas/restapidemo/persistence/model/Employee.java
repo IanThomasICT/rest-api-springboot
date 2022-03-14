@@ -1,6 +1,7 @@
 package com.ianthomas.restapidemo.persistence.model;
 
 import com.ianthomas.restapidemo.exception.InvalidArgumentsException;
+import com.ianthomas.restapidemo.persistence.annotation.Indexable;
 import com.sun.istack.NotNull;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 
@@ -10,26 +11,27 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Entity
+@Indexable
 public class Employee extends PersistentEntity{
-    @Id private Integer id;
+    @Id private Integer employeeId;
     @NotNull private String lastName;
     @NotNull private String firstName;
     @NotNull private String email;
     @NotNull private Integer officeId;
     @NotNull private String jobTitle;
 
-    public Employee(Integer id, String lastName, String firstName, String email, Integer officeId, String jobTitle) {
+    public Employee(Integer employeeId, String lastName, String firstName, String email, Integer officeId, String jobTitle) {
         try {
-            Objects.requireNonNull(id, "Invalid id: null value");
+            Objects.requireNonNull(employeeId, "Invalid employeeId: null value");
             Objects.requireNonNull(firstName, "Invalid first name: null value");
             Objects.requireNonNull(lastName, "Invalid last name: null value");
             Objects.requireNonNull(email, "Invalid email: null value");
-            Objects.requireNonNull(officeId, "Invalid office id: city cannot be null");
+            Objects.requireNonNull(officeId, "Invalid office employeeId: city cannot be null");
             Objects.requireNonNull(jobTitle, "Invalid job title: null value");
          } catch (NullPointerException e) {
             throw new InvalidArgumentsException(e.getMessage(), e);
         }
-        this.id = id;
+        this.employeeId = employeeId;
         this.lastName = lastName;
         this.firstName = firstName;
         this.email = email;
@@ -44,7 +46,7 @@ public class Employee extends PersistentEntity{
     @Override
     public XContentBuilder updateBuilderFields(XContentBuilder builder) throws IOException {
         builder = super.updateBuilderFields(builder)
-                .field("employeeID",id)
+                .field("employeeID", employeeId)
                 .field("firstName",firstName)
                 .field("lastName",lastName)
                 .field("email",email)
@@ -54,13 +56,12 @@ public class Employee extends PersistentEntity{
     }
 
 
-
-    public Integer getId() {
-        return id;
+    public Integer getEmployeeId() {
+        return employeeId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getLastName() {

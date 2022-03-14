@@ -9,7 +9,7 @@
 
 ### Schema:
     Customers {
-        int id (PK)
+        int employeeId (PK)
         string companyName
         string contactFirstName
         string contactLastName
@@ -29,7 +29,7 @@
     }
 
     Employees {
-        int id (PK)
+        int employeeId (PK)
         string lastName
         string firstName
         string email
@@ -38,7 +38,7 @@
     }
 
     Offices {
-        int id (PK)
+        int employeeId (PK)
         string phone
         string addressLine1
         string addressLine2

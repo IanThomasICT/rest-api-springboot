@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `customer` (
-  `id` int(11) NOT NULL,
+  `employeeId` int(11) NOT NULL,
   `address_line1` varchar(255) DEFAULT NULL,
   `address_line2` varchar(255) DEFAULT NULL,
   `state` varchar(255) DEFAULT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `customer` (
   `phone` varchar(255) DEFAULT NULL,
   `postal_code` varchar(15) DEFAULT NULL,
   `city` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`employeeId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -56,13 +56,13 @@ DROP TABLE IF EXISTS `employee`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `employee` (
-  `id` int(11) NOT NULL,
+  `employeeId` int(11) NOT NULL,
   `email` varchar(255) DEFAULT NULL,
   `first_name` varchar(255) DEFAULT NULL,
   `job_title` varchar(255) DEFAULT NULL,
   `last_name` varchar(255) DEFAULT NULL,
   `office_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`employeeId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -106,12 +106,12 @@ DROP TABLE IF EXISTS `payment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `payment` (
-  `id` int(11) NOT NULL,
+  `employeeId` int(11) NOT NULL,
   `amount` double DEFAULT NULL,
   `payment_date` datetime DEFAULT NULL,
   `customer_id_id` int(11) NOT NULL,
   `employee_id_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`employeeId`),
   KEY `FKdmmn24gn20ah4xxoo7gse920n` (`customer_id_id`),
   KEY `FK808dyd50el1mhpdeqlh82c0oe` (`employee_id_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;

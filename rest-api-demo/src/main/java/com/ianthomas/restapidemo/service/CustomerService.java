@@ -1,5 +1,6 @@
 package com.ianthomas.restapidemo.service;
 
+import com.ianthomas.restapidemo.exception.InvalidArgumentsException;
 import com.ianthomas.restapidemo.exception.ItemAlreadyExistsException;
 import com.ianthomas.restapidemo.exception.ItemNotFoundException;
 import com.ianthomas.restapidemo.persistence.model.Customer;
@@ -40,17 +41,29 @@ public class CustomerService {
         if (exists) {
             throw new ItemAlreadyExistsException("Customer already exists");
         }
-        customerRepository.save(customer);
-        LOG.info("Added Customer {} to repository",customer.getId());
+        customer.save(customerRepository);
         return customer;
     }
 
     public void deleteCustomer(Integer id) {
-        Boolean exists = customerRepository.existsById(id);
-        if (!exists) {
+        Optional<Customer> customer = customerRepository.findById(id);
+        if (!customer.isPresent()) {
             throw new ItemNotFoundException("Customer does not exist");
         }
-        customerRepository.deleteById(id);
-        LOG.info("Deleted Customer {}",id);
+        customer.get().delete(customerRepository);
+    }
+
+    public List<Customer> queryCustomers(String country, String city) {
+        if (country != null){
+            LOG.info("Querying customers by country");
+            return customerRepository.findByCountry(country);
+        } else if (city != null){
+            LOG.info("Querying customers by city");
+            return customerRepository.findByCity(city);
+        }
+        else {
+            LOG.warn("Invalid customer query parameters");
+            throw new InvalidArgumentsException("Invalid query parameters");
+        }
     }
 }

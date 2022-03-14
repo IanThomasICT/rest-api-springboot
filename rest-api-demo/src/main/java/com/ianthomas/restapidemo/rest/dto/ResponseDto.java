@@ -1,31 +1,23 @@
 package com.ianthomas.restapidemo.rest.dto;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class ResponseDto implements Serializable {
 
     private static final long serialVersionUID = 6936074936467382843L;
     private String status;
     private String message;
-    private Object object;
-    private List<Object> objects;
+    private Object result;
 
     public ResponseDto(String status, String message) {
         this.status = status;
         this.message = message;
     }
 
-    public ResponseDto(String status, String message, Object object) {
+    public ResponseDto(String status, String message, Object result) {
         this.status = status;
         this.message = message;
-        this.object = object;
-    }
-
-    public ResponseDto(String status, String message, List<Object> objects) {
-        this.status = status;
-        this.message = message;
-        this.objects = objects;
+        this.result = result;
     }
 
     public String getStatus() {
@@ -44,11 +36,12 @@ public class ResponseDto implements Serializable {
         this.message = message;
     }
 
-    public Object getObject() {
-        return object;
+    public Object getResult() {
+        return result;
     }
 
-    public void setObject(Object object) {
-        this.object = object;
+    public void setResult(Object result) {
+        this.result = result;
     }
+
 }

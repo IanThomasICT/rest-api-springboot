@@ -3,28 +3,39 @@ package com.ianthomas.restapidemo.util;
 import com.ianthomas.restapidemo.persistence.model.Customer;
 import com.ianthomas.restapidemo.persistence.model.Employee;
 import com.ianthomas.restapidemo.persistence.model.PersistentEntity;
+import com.ianthomas.restapidemo.persistence.repository.CustomerRepository;
+import com.ianthomas.restapidemo.persistence.repository.EmployeeRepository;
 import com.ianthomas.restapidemo.service.CustomerService;
 import com.ianthomas.restapidemo.service.EmployeeService;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
+import org.elasticsearch.index.IndexNotFoundException;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+@Component
 public class ElasticsearchUtil {
 
     private static TransportClient transportClient;
-    private final CustomerService customerService;
-    private final EmployeeService employeeService;
+    private final CustomerRepository customerRepository;
+    private final EmployeeRepository employeeRepository;
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    public ElasticsearchUtil(CustomerService customerService, EmployeeService employeeService) {
-        this.customerService = customerService;
-        this.employeeService = employeeService;
+    @Autowired
+    public ElasticsearchUtil(CustomerRepository customerRepository, EmployeeRepository employeeRepository) {
+        this.customerRepository = customerRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     private static String HOST;
@@ -45,6 +56,8 @@ public class ElasticsearchUtil {
         SCHEME = scheme;
     }
 
+    private static Map<String, Class> indicesMap = Map.ofEntries(Map.entry("customer", Customer.class),Map.entry( "employee", Employee.class));
+
     // Construct transportClient using application.properties info
     public static TransportClient getTransportClient()  {
         if (transportClient == null) {
@@ -59,14 +72,22 @@ public class ElasticsearchUtil {
         return transportClient;
     }
 
-//    // Indexes JPA values in ES
-//    public void reIndex() {
-//        List<Customer> customers = customerService.getCustomers();
-//        for (Customer c : customers) {
-//            if (((PersistentEntity) c).IsDeleted)
-//        }
-//
-//        List<Employee> employees = employeeService.getEmployees();
-//
-//    }
+    // Indexes JPA values in ES
+    public void mergeDB() {
+        TransportClient client = ElasticsearchUtil.getTransportClient();
+        try{
+            for (String index : indicesMap.keySet()){
+                LOG.info("Deleting previous index: {}", index);
+                client.admin().indices().prepareDelete(index).get();
+            }
+        } catch (IndexNotFoundException e) {
+            LOG.info(e.getMessage());
+        }
+        List<Customer> customers = customerRepository.findAll();
+        Customer.index((Customer[]) customers.toArray(new Customer[0]));
+
+        List<Employee> employees = employeeRepository.findAll();
+        Employee.index((Employee[]) employees.toArray(new Employee[0]));
+
+    }
 }

@@ -1,6 +1,7 @@
 package com.ianthomas.restapidemo.persistence.model;
 
 import com.ianthomas.restapidemo.exception.InvalidArgumentsException;
+import com.ianthomas.restapidemo.persistence.annotation.Indexable;
 import com.sun.istack.NotNull;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Entity
+@Indexable
 public class Customer extends PersistentEntity{
 
     @Id private Integer id;
@@ -74,7 +76,6 @@ public class Customer extends PersistentEntity{
                 .field("country",country);
         return builder;
     }
-
 
 
 

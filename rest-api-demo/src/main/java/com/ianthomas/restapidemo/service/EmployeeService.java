@@ -1,5 +1,6 @@
 package com.ianthomas.restapidemo.service;
 
+import com.ianthomas.restapidemo.exception.InvalidArgumentsException;
 import com.ianthomas.restapidemo.exception.ItemAlreadyExistsException;
 import com.ianthomas.restapidemo.exception.ItemNotFoundException;
 import com.ianthomas.restapidemo.persistence.model.Employee;
@@ -37,12 +38,11 @@ public class EmployeeService {
     }
 
     public Employee addEmployee(Employee employee) {
-        Boolean exists = employeeRepository.existsById(employee.getId());
+        Boolean exists = employeeRepository.existsById(employee.getEmployeeId());
         if (exists) {
             throw new ItemAlreadyExistsException("Employee already exists");
         }
         employeeRepository.save(employee);
-        LOG.info("Added Employee {} to repository",employee.getId());
         return employee;
     }
 
@@ -52,6 +52,19 @@ public class EmployeeService {
             throw new ItemNotFoundException("Employee does not exist");
         }
         employeeRepository.deleteById(id);
-        LOG.info("Deleted Employee {}",id);
+    }
+
+    public List<Employee> queryEmployees(String jobTitle, Integer officeId) {
+        if (jobTitle != null){
+            LOG.info("Querying employees by job title");
+            return employeeRepository.findByJobTitle(jobTitle);
+        } else if (officeId != null){
+            LOG.info("Querying employees by office id");
+            return employeeRepository.findByOfficeId(officeId);
+        }
+        else {
+            LOG.warn("Invalid employee query parameters");
+            throw new InvalidArgumentsException("Invalid query parameters");
+        }
     }
 }
