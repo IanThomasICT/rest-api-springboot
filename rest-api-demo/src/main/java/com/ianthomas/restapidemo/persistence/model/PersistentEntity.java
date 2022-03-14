@@ -2,17 +2,23 @@ package com.ianthomas.restapidemo.persistence.model;
 
 import com.ianthomas.restapidemo.persistence.annotation.Indexable;
 import com.ianthomas.restapidemo.util.ElasticsearchUtil;
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.support.WriteRequest;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.hibernate.Hibernate;
+import org.hibernate.collection.internal.PersistentBag;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.io.IOException;
+import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @MappedSuperclass
@@ -52,6 +58,23 @@ public class PersistentEntity {
             ElasticsearchUtil.getTransportClient().prepareDelete(type, "doc", id).setRefreshPolicy(WriteRequest.RefreshPolicy.IMMEDIATE).get();
         }
     }
+
+
+//    public <T> List<T> index(T... objects) {
+//        TransportClient client = ElasticsearchUtil.getTransportClient();
+//        BulkRequestBuilder builder = client.prepareBulk();
+//        for (T obj : objects){
+//            String type = obj.getClass().getSimpleName().toLowerCase();
+//            if (((PersistentEntity) obj).isDeleted)
+//                builder.add(client.prepareDelete(type, "doc", ((PersistentEntity) obj).id));
+//            else
+//                builder.add(client.prepareIndex(type, "doc", ((PersistentEntity) obj).id).setSource(((PersistentEntity) obj).constructJsonDocument(), XContentType.JSON));
+//        }
+//
+//
+//        return
+//    }
+
 
 
     // Build JSON Document from object

@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 public class Initialize implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
+        // Load JPA into ES
 
     }
 

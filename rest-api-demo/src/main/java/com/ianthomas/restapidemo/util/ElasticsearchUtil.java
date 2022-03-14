@@ -1,5 +1,10 @@
 package com.ianthomas.restapidemo.util;
 
+import com.ianthomas.restapidemo.persistence.model.Customer;
+import com.ianthomas.restapidemo.persistence.model.Employee;
+import com.ianthomas.restapidemo.persistence.model.PersistentEntity;
+import com.ianthomas.restapidemo.service.CustomerService;
+import com.ianthomas.restapidemo.service.EmployeeService;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
@@ -8,11 +13,19 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Optional;
 
 public class ElasticsearchUtil {
 
     private static TransportClient transportClient;
+    private final CustomerService customerService;
+    private final EmployeeService employeeService;
+
+    public ElasticsearchUtil(CustomerService customerService, EmployeeService employeeService) {
+        this.customerService = customerService;
+        this.employeeService = employeeService;
+    }
 
     private static String HOST;
     private static int REST_PORT;
@@ -45,4 +58,15 @@ public class ElasticsearchUtil {
         }
         return transportClient;
     }
+
+//    // Indexes JPA values in ES
+//    public void reIndex() {
+//        List<Customer> customers = customerService.getCustomers();
+//        for (Customer c : customers) {
+//            if (((PersistentEntity) c).IsDeleted)
+//        }
+//
+//        List<Employee> employees = employeeService.getEmployees();
+//
+//    }
 }
