@@ -38,7 +38,7 @@ public class EmployeeService {
     }
 
     public Employee addEmployee(Employee employee) {
-        Boolean exists = employeeRepository.existsById(employee.getEmployeeId());
+        Boolean exists = employeeRepository.existsById(employee.getId());
         if (exists) {
             throw new ItemAlreadyExistsException("Employee already exists");
         }
